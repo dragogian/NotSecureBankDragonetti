@@ -46,6 +46,7 @@ public class ServletUtil {
 
     public static final Pattern XSS_REGEXP = Pattern.compile(".*(?:(<|\\%3c)(\\/|%2f|\\s|\\\u3000)*(script|img|javascript).*(>|%3e)|javascript(:|%3a)|(onblur|onchange|onfocus|onreset|onselect|onsubmit|onabort|onerror|onkeydown|onkeypress|onkeyup|onclick|ondblclick|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|onload|onunload|ondragdrop|onmove|onresize|style)=).*", Pattern.CASE_INSENSITIVE);
 
+    public static final Pattern PATH_REGEXP = Pattern.compile("/^\\\\?(\\.\\.?\\\\)*.*$/gm");
     public static String[] searchArticles(String query, String path) {
         LOG.debug("searchArticles('" + query + "', '" + path + "')");
 

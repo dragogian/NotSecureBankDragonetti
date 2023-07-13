@@ -7,9 +7,17 @@
 	<jsp:include page="membertoc.jspf"/>
     <td valign="top" colspan="3" class="bb">
 		<div class="fl" style="width: 99%;">
-		
+		<%@ page import="org.owasp.encoder.Encode" %>
+		<%@ page import="com.notsecurebank.util.ServletUtil" %>
 		<%
-			String content = request.getParameter("content");
+			String content = Encode.forJava(request.getParameter("content"));
+
+			boolean regExMatch = content!=null && content.matches(ServletUtil.PATH_REGEXP);
+
+			if(regExMatch) {
+                throw new ServletException("Invalid content");
+            }
+
 			if (content != null && !content.equalsIgnoreCase("customize.jsp")){
 				if (content.startsWith("http://") || content.startsWith("https://")){
 					response.sendRedirect(content);
