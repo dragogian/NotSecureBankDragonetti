@@ -23,7 +23,7 @@ public class SubscribeServlet extends HttpServlet {
 
         String email = request.getParameter("txtEmail");
         if (email == null || !ServletUtil.isValidEmail(email)) {
-            LOG.error("Invalid e-mail: '" + email + "'.");
+            LOG.error("An error occured");
             response.sendRedirect("index.jsp");
             return;
         }
@@ -33,9 +33,9 @@ public class SubscribeServlet extends HttpServlet {
 
             String registeredUser = DBUtil.addSubscription(email);
             if (registeredUser == null) {
-                messageSubscribe = "Thank you. Your email <em>" + email + "</em> has been accepted. You are not registered yet. Please <a href='locations.jsp'>search</a> for the Branch Office closest to you and ask them for an account.";
+                messageSubscribe = "Thank you. You are not registered yet. Please <a href='locations.jsp'>search</a> for the Branch Office closest to you and ask them for an account.";
             } else {
-                messageSubscribe = "Hello <em>" + registeredUser + "</em>! Your email <em>" + email + "</em> has been accepted. Please <a href='login.jsp'>sign in</a> to use our advanced banking features.";
+                messageSubscribe = "Hello <em>" + registeredUser + "</em>! Please <a href='login.jsp'>sign in</a> to use our advanced banking features.";
             }
 
         } catch (Exception e) {
