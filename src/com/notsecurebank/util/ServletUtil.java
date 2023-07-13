@@ -265,12 +265,12 @@ public class ServletUtil {
 
     public static boolean isPreApprovedForGoldVisa(HttpServletRequest request) {
         LOG.debug("isPreApprovedForGoldVisa");
-
+        User user = (User) request.getSession().getAttribute(ServletUtil.SESSION_ATTR_USER);
         boolean isPreApprovedForGoldVisa = false;
         Cookie[] cookies = request.getCookies();
         if (cookies != null && cookies.length > 0) {
             for (Cookie c : cookies) {
-                if ("preApprovedForGoldVisa".equals(c.getName()) && "true".equals(c.getValue())) {
+                if (user.hasGoldVisaDelivery()) {
                     isPreApprovedForGoldVisa = true;
                     break;
                 }
