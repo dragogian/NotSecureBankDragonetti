@@ -1,10 +1,13 @@
 package com.notsecurebank.util;
 
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.LogManager;
@@ -12,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import com.notsecurebank.model.Account;
 import com.notsecurebank.model.User;
+import org.owasp.encoder.Encode;
 
 public class OperationsUtil {
 
@@ -24,6 +28,17 @@ public class OperationsUtil {
 
         User user = ServletUtil.getUser(request);
         String userName = user.getUsername();
+
+
+        String csrfToken = request.getParameter("csrfToken");
+        HttpSession session = request.getSession();
+        String storedCsrfToken = (String) session.getAttribute("csrfToken");
+
+        if (csrfToken == null || !csrfToken.equals(storedCsrfToken)) {
+            // Token CSRF non valido, rifiuta la richiesta
+            return "ERROR: Invalid CSRF token";
+        }
+
 
         try {
             Long accountId = -1L;

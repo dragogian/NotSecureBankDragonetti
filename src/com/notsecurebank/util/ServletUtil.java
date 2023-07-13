@@ -3,8 +3,10 @@ package com.notsecurebank.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -17,6 +19,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.owasp.encoder.Encode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -212,11 +215,27 @@ public class ServletUtil {
             String accountStringList = Account.toBase64List(accounts);
             Cookie accountCookie = new Cookie(ServletUtil.NOT_SECURE_BANK_COOKIE, accountStringList);
             session.setAttribute(ServletUtil.SESSION_ATTR_USER, user);
+            session.setAttribute("csrfToken",generateCsrfToken());
             return accountCookie;
         } catch (SQLException e) {
             LOG.error(e.toString());
             return null;
         }
+    }
+
+    private static String generateCsrfToken() {
+        // Genera un byte array casuale utilizzando SecureRandom
+        byte[] randomBytes = new byte[32];
+        SecureRandom secureRandom = new SecureRandom();
+        secureRandom.nextBytes(randomBytes);
+
+        // Codifica il byte array in Base64URL
+        String encodedToken = Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
+
+        // Effettua l'escape del token per la sicurezza
+        String csrfToken = Encode.forJava(encodedToken);
+
+        return csrfToken;
     }
 
     static public boolean isLoggedin(HttpServletRequest request) {
