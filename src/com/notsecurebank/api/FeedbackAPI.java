@@ -56,6 +56,9 @@ public class FeedbackAPI extends NotSecureBankAPI {
             return Response.status(400).entity("{\"Error\": \"Body does not contain all the correct attributes\"}").build();
         }
 
+        if (email.matches(ServletUtil.EMAIL_REGEXP))
+            return Response.status(400).entity("{\"Error\": \"Body does not contain a legal email\"}").build();
+
         String feedbackId = OperationsUtil.sendFeedback(name, email, subject, comments);
 
         if (feedbackId != null) {

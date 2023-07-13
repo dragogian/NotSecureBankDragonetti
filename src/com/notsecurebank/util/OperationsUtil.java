@@ -102,6 +102,7 @@ public class OperationsUtil {
     public static String sendFeedback(String name, String email, String subject, String comments) {
         LOG.debug("sendFeedback('" + name + "', '" + email + "', '" + subject + "', '" + comments + "')");
 
+        name = StringEscapeUtils.escapeSql(name);
         email = StringEscapeUtils.escapeSql(email);
         subject = StringEscapeUtils.escapeSql(subject);
         comments = StringEscapeUtils.escapeSql(comments);

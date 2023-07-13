@@ -499,8 +499,16 @@ public class DBUtil {
         try {
             Connection connection = getConnection();
             Statement statement = connection.createStatement();
-            statement.execute("INSERT INTO FEEDBACK (NAME,EMAIL,SUBJECT,COMMENTS) VALUES ('" + name + "', '" + email + "', '" + subject + "', '" + comments + "')", Statement.RETURN_GENERATED_KEYS);
-            ResultSet rs = statement.getGeneratedKeys();
+
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO FEEDBACK (NAME,EMAIL,SUBJECT,COMMENTS) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, email);
+            preparedStatement.setString(3, subject);
+            preparedStatement.setString(4, comments);
+
+            preparedStatement.executeUpdate();
+
+            ResultSet rs = preparedStatement.getGeneratedKeys();
             long id = -1;
             if (rs.next()) {
                 id = rs.getLong(1);
