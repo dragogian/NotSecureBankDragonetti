@@ -296,4 +296,8 @@ public class ServletUtil {
         request.getSession().setAttribute("specialPrizeCode", specialPrizeCode);
         return specialPrizeCode;
     }
+
+    public static boolean isAdmin (User user){
+        return User.Role.Admin.equals(user.getRole());
+    }
 }
